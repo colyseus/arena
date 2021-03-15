@@ -1,4 +1,5 @@
 import http from "http";
+import cors from "cors";
 import express from "express";
 import { Server } from "colyseus";
 
@@ -15,6 +16,9 @@ export default function (options: ArenaOptions) {
     for (let key in options) {
         if (ALLOWED_KEYS.indexOf(key as keyof ArenaOptions) === -1) {
             throw new Error(`Invalid option '${key}'. Allowed options are: ${ALLOWED_KEYS.join(", ")}`);
+
+        } else if (typeof(options[key as keyof ArenaOptions]) !== "function") {
+            throw new Error(`'${key}' should be a function.`);
         }
     }
 
@@ -35,9 +39,18 @@ export function listen(
 
     const gameServer = new Server({ server, });
 
-    options.initializeExpress?.(app);
+    // Enable CORS + JSON parsing.
+    app.use(cors());
+    app.use(express.json());
+
     options.initializeGameServer?.(gameServer);
+    options.initializeExpress?.(app);
     options.beforeListen?.();
 
     gameServer.listen(port);
+
+    const appId = options.getId?.();
+    if (appId) { console.log(appId); }
+
+    console.log(`Listening on ws://localhost:${ port }`);
 }
