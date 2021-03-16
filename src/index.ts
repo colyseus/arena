@@ -1,7 +1,23 @@
+import fs from "fs";
 import http from "http";
+import path from "path";
 import cors from "cors";
 import express from "express";
 import { Server } from "colyseus";
+import dotenv from "dotenv";
+
+const envFilename = (process.env.NODE_ENV === "production") 
+    ? "arena.env"
+    : "development.env"
+const envPath = path.resolve(path.dirname(require!.main!.filename), "..", envFilename);
+
+if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath });
+    console.log(`✅  ${envFilename} loaded.`);
+
+} else {
+    console.log(`⚠️  ${envFilename} not found.`);
+}
 
 export interface ArenaOptions {
     getId?: () => string,
@@ -50,7 +66,7 @@ export function listen(
     gameServer.listen(port);
 
     const appId = options.getId?.();
-    if (appId) { console.log(appId); }
+    if (appId) { console.log(`${appId}`); }
 
-    console.log(`Listening on ws://localhost:${ port }`);
+    console.log(`⚔️  Listening on ws://localhost:${ port }`);
 }
