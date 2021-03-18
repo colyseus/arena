@@ -1,6 +1,6 @@
 {
   "name": "@colyseus/arena",
-  "version": "0.14.12",
+  "version": "0.14.13",
   "description": "Colyseus Arena Tools",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",

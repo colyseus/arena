@@ -12,7 +12,7 @@ import dotenv from "dotenv";
 if (process.env.NODE_ARENA !== "true") {
     const envFilename = (process.env.NODE_ENV === "production")
         ? "arena.env"
-        : `${process.env.NODE_ENV}.env`
+        : `${process.env.NODE_ENV || "development"}.env`
     const envPath = path.resolve(path.dirname(require!.main!.filename), "..", envFilename);
 
     if (fs.existsSync(envPath)) {
